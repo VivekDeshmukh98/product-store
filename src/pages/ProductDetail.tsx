@@ -1,10 +1,36 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import type { Product } from "../interfaces/Product";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { CartContext } from '../context/CartContext'
 
 export const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
+  const context = useContext(CartContext)
+  if (!context) throw new Error("Must be inside CartProvider")
+  const { cart, setCart } = context
+
+  
+  const handleAddToCart = (item: Product) => {
+    const existingItem = cart.find((cartItem) => cartItem.id === item.id);
+    if (existingItem) {
+      // If exists, increase quantity
+      const updatedCart = cart.map((cartItem) =>
+        cartItem.id === item.id
+          ? { ...cartItem, quantity: cartItem.quantity + 1 }
+          : cartItem
+      );
+      setCart(updatedCart);
+      console.log("Current Cart:", updatedCart);
+    } else {
+      // If not exists, add with quantity 1
+      const cartItem = { ...item, quantity: 1 };
+      const updatedCart = [...cart, cartItem];
+      setCart(updatedCart);
+      console.log("Current Cart:", updatedCart);
+    }
+  };
+
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -16,6 +42,7 @@ export const ProductDetail = () => {
     if (id) fetchProduct();
   }, [id]);
 
+
   if (!product) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
@@ -26,13 +53,13 @@ export const ProductDetail = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center">
-      <div className="max-w-screen-xl mx-auto px-4 py-10 w-full">
+      <div className="max-w-7xl mx-auto px-4 py-10 w-full">
         <div className="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
 
           {/* Image Section */}
           <div className="flex items-center justify-center">
             <img
-              className="max-h-[450px] object-contain transition-transform duration-300 hover:scale-105"
+              className="max-h-112.5 object-contain transition-transform duration-300 hover:scale-105"
               src={product.image}
               alt={product.title}
             />
@@ -85,9 +112,12 @@ export const ProductDetail = () => {
                 ❤️ Add to favorites
               </button>
 
-              <button className="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 transition text-white">
+              <button className="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 transition text-white" onClick={() => handleAddToCart(product)}>
                 🛒 Add to cart
               </button>
+              <Link to="/cart" className="px-6 py-2.5 rounded-lg bg-green-600 hover:bg-green-700 transition text-white">
+  View Cart
+</Link>
             </div>
 
             <hr className="my-6 border-gray-700" />
