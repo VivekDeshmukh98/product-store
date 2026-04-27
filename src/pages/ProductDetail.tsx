@@ -108,9 +108,9 @@ export const ProductDetail = () => {
 
             {/* Buttons */}
             <div className="mt-6 flex gap-4 flex-wrap">
-              <button className="px-6 py-2.5 rounded-lg bg-gray-200 hover:bg-gray-300 transition">
+              {/* <button className="px-6 py-2.5 rounded-lg bg-gray-200 hover:bg-gray-300 transition">
                 ❤️ Add to favorites
-              </button>
+              </button> */}
 
               <button className="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 transition text-white" onClick={() => handleAddToCart(product)}>
                 🛒 Add to cart

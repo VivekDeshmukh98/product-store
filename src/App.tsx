@@ -7,6 +7,7 @@ import { CartContext } from "./context/CartContext";
 import { useEffect, useState } from "react";
 import type { CartItem } from "./context/CartContext";
 import { Cart } from "./pages/Cart";
+import { Navbar } from "./components/Navbar";
 
 function App() {
   const [cart, setCart] = useState<CartItem[]>(() => {
@@ -22,18 +23,18 @@ function App() {
 
 
   return (
-    // <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
-    <CartContext.Provider value={{ cart, setCart }}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="*" element={<div>404 Not Found</div>} />
-        </Routes>
-      </BrowserRouter>
-    </CartContext.Provider>
-  );
+  <CartContext.Provider value={{ cart, setCart }}>
+    <BrowserRouter>
+      <Navbar />  {/* ✅ Inside BrowserRouter, above Routes */}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="*" element={<div>404 Not Found</div>} />
+      </Routes>
+    </BrowserRouter>
+  </CartContext.Provider>
+)
 }
 
 export default App;
